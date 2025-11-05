@@ -1,6 +1,7 @@
 //Global variables
 
 let level, answer, score;
+var name;
 const levelArr = document.getElementsByName("level");
 const scoreArr = [];
 window.onload = function() {setInterval(time, 100);}
@@ -9,6 +10,7 @@ window.onload = function() {setInterval(time, 100);}
 
 playBtn.addEventListener("click", play);
 guessBtn.addEventListener("click", makeGuess);
+catBtn.addEventListener("click", Name);
 
 function play(){
 
@@ -118,4 +120,12 @@ function time(){
 
     return d;
 
+}
+
+function Name(){
+    name = document.getElementById("name").value;
+    name = name.toLowerCase();
+    console.log(name);
+    name = String(name).charAt(0).toUpperCase() + String(name).slice(1);
+    document.getElementById("printName").innerHTML = "hello, " + name;
 }
