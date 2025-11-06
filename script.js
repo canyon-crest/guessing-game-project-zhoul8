@@ -1,131 +1,361 @@
-//Global variables
-
-let level, answer, score;
-var name;
 const levelArr = document.getElementsByName("level");
+let level, answer, score, userName, temp, startingTime, timePassed, stopped, userHints;
 const scoreArr = [];
-window.onload = function() {setInterval(time, 100);}
+const loseArr = [];
+const totalArr = [];
+const timeArr = [];
 
-
-
+nameBtn.addEventListener("click", start);
 playBtn.addEventListener("click", play);
+playBtn.addEventListener("click", startTimer);
 guessBtn.addEventListener("click", makeGuess);
-catBtn.addEventListener("click", Name);
+giveUpBtn.addEventListener("click", iGaveUp);
+hintBtn.addEventListener("click", giveHint);
 
-function play(){
+// date.innerHTML = time();
+setInterval(time, 500);
 
-    score = 0; //Sets score to 0 every new game
-    playBtn.disabled = true;
-    guessBtn.disabled = false;
-    guess.disabled = false;
+function time() {
+    let date = new Date();
+    let dom = date.getDate();
+    let dow = date.getDay();
+    let month = date.getMonth();
+    let year = date.getFullYear();
+    let mins = date.getMinutes();
+    let hour = date.getHours();
+    let sec = date.getSeconds();
+    let amPm = "AM";
 
-    for(let i=0; i<levelArr.length; i++){
+    switch (dow) {
+        case 0: dow = "Sunday"; break;
+        case 1: dow = "Monday"; break;
+        case 2: dow = "Tuesday"; break;
+        case 3: dow = "Wednesday"; break;
+        case 4: dow = "Thursday"; break;
+        case 5: dow = "Friday"; break;
+        case 6: dow = "Saturday"; break;
+    }
 
-        if(levelArr[i].checked){
+    switch (month) {
+        case 0: month = "January"; break;
+        case 1: month = "February"; break;
+        case 2: month = "March"; break;
+        case 3: month = "April"; break;
+        case 4: month = "May"; break;
+        case 5: month = "June"; break;
+        case 6: month = "July"; break;
+        case 7: month = "August"; break;
+        case 8: month = "September"; break;
+        case 9: month = "October"; break;
+        case 10: month = "November"; break;
+        case 11: month = "December"; break;
+    }
 
-            level = levelArr[i].value;
+    switch (dom%10) {
+        case 1: dom = dom+"st"; break;
+        case 2: dom = dom+"nd"; break;
+        case 3: dom = dom+"rd"; break;
+        default: dom = dom+"th"; break;
+    }
 
+    if (hour>=12) {
+        hour = hour-12;
+        amPm = "PM";
+    }
+
+    if (hour==0) {
+        hour = 12;
+    }
+
+    if (mins<10) {
+        mins = "0" + mins;
+    }
+
+    if (sec<10) {
+        sec = "0" + sec;
+    }
+    document.getElementById("date").innerHTML = hour+":"+mins+":"+sec+" "+amPm+"<br/>"+dow+", "+month+" "+dom+", "+year;
+}
+
+function start() {
+    userName = document.getElementById("Name").value;
+    if (userName == "") {
+        enterName.innerHTML = "Please enter a name";
+        return;
+    }
+    else {
+        enterName.innerHTML = "Hello, " + userName;
+        Name.disabled = true;
+        nameBtn.disabled = true;
+        playBtn.disabled = false;
+        custom.disabled = false;
+        msg1.style.display = "none";
+        displayTime.style.display = "none";
+        msg.innerHTML = "Select a Level, " + userName;
+        for (let i=0; i<levelArr.length; i++) {
+            levelArr[i].disabled = false;
         }
-        levelArr[i].disabled = true;
+    }
+}
 
+function play() {
+    score = 0;
+    temp = 100;
+    userHints = 0;
+
+    let customDiff = custom.value;
+    if (customDiff == "" || isNaN(customDiff) || customDiff <= 1) {
+        for (let i=0; i<levelArr.length; i++) {
+            if (levelArr[i].checked) {
+                level = levelArr[i].value;
+            }
+            levelArr[i].disabled = true;
+        }
+    }
+    else {
+        level = parseInt(custom.value);
+        for (let i=0; i<levelArr.length; i++) {
+            levelArr[i].disabled = true;
+            levelArr[i].checked = false;
+        }
+    }
+
+    playBtn.disabled = true;
+    custom.disabled = true;
+    guess.disabled = false;
+    guessBtn.disabled = false;
+    giveUpBtn.disabled = false;
+
+    scoreDisplay.style.display = "none";
+    msg1.style.display = "block";
+    msg1.innerHTML = "Temperature:"
+    displayTime.style.display = "block";
+
+    answer = Math.floor(Math.random()*level) + 1;
+    msg.innerHTML = userName + ", Guess an integer 1-" + level;
+    guess.placeholder = answer; // get rid of this to remove answer showing
+}
+
+function startTimer() {
+    let d = new Date();
+    stopped = false;
+    startingTime = d.getTime();
+    setInterval(timerGoing, 50);
+}
+
+function stopTimer() {
+    stopped = true;
+}
+
+function timerGoing() {
+    let d = new Date();
+    if (!stopped) {
+        timePassed = d.getTime() - startingTime;
+    }
+
+    let mins = Math.floor(timePassed/60000);
+    let secs = Math.floor((timePassed % 60000)/1000);
+    let ms = (timePassed % 60000) % 1000;
+
+    if (mins<10) {
+        mins = "0" + mins;
+    }
+    if (secs<10) {
+        secs = "0" + secs;
+    }
+    if (ms<10) {
+        ms = "00" + ms;
+    }
+    else if (ms<100) {
+        ms = "0" + ms;
+    }
+
+    displayTime.innerHTML = "Time: " + mins + ":" + secs + "." + ms;
+    
+}
+
+function makeGuess() {
+    let userGuess = parseInt(guess.value);
+    temp = Math.abs(answer-userGuess);
+
+    if (temp == 0) {
+        msg1.innerHTML = "Temperature: BURNING!";
+    }
+    else if (temp <= 0.05*level) {
+        msg1.innerHTML = "Temperature: Very Hot"
+    }
+    else if (temp <= 0.1*level) {
+        msg1.innerHTML = "Temperature: Hot";
+    }
+    else if (temp <= 0.2*level) {
+        msg1.innerHTML = "Temperature: Warm";
+    }
+    else if (temp <= 0.5*level) {
+        msg1.innerHTML = "Temperature: Cool";
+    }
+    else {
+        msg1.innerHTML = "Temperature: Cold";
+        userHints = userHints + 1;
+        hintNumbers.innerHTML = "Hints: " + userHints;
+        hintBtn.disabled = false;
 
     }
 
-    msg.textContent = "Guess a number from 1-" + level;
-    answer = Math.floor(Math.random()*level)+1;
-    guess.placeholder = answer;
-
-}
-
-function makeGuess(){
-
-    let userGuess = parseInt(guess.value);
-
-    if(isNaN(userGuess) || userGuess < 1 || userGuess > level){
-        msg.textContent  = "Enter a VALID number from 1-" + level;
+    if (userGuess == 0) {
+        msg.innerHTML = "Too low. Guess an integer 1-" + level + ", " + userName;
+        return;
+    }
+    else if (isNaN(userGuess) || userGuess == "") {
+        msg.innerHTML = "Invalid. Guess an integer 1-" + level + ", " + userName;
         return;
     }
     score++;
-
-    if(userGuess < answer){
-
-        msg.textContent = "Too low, try again.";
-
+    if (userGuess<answer) {
+        msg.innerHTML = "Too low. guess an integer 1-" + level + ", " + userName;
     }
-    else if(userGuess > answer){
-        msg.textContent = "Too high, try again.";
+    else if (userGuess>answer) {
+        msg.innerHTML = "Too high. guess an integer 1-" + level + ", " + userName;
     }
-    else{
-        msg.textContent = "You got it, it took you " + score + " tries. Press play to play again.";
+    else {
+        if (score == 1) {
+            msg.innerHTML = "Correct! You won in " + score + " try, " + userName;
+        }
+        else {
+            msg.innerHTML = "Correct! You won in " + score + " tries, " + userName;
+        }
+        timeArr.push(timePassed);
+        stopTimer();
+        scoreArr.push(score);
+        totalArr.push(score);
         updateScore();
         reset();
-
     }
-
 }
 
-function reset(){
+function giveHint() {
+    let maxVal = answer*1.2;
+    let minVal = answer*0.8;
+    let hintVal = Math.floor(Math.random()*(maxVal-minVal)+ minVal);
+    while (hintVal == answer) {
+        hintVal = Math.floor(Math.random()*(maxVal-minVal)+ minVal);
+    }
+    hints.innerHTML = hintVal + " is close to your number!";
+    userHints = userHints - 1;
+    hintNumbers.innerHTML = "Hints: " + userHints;
+    if (userHints <= 0) {
+        hintBtn.disabled = true;
+    }
+}
 
-    guessBtn.disabled = true;
+function iGaveUp() {
+    if (isNaN(temp)) {
+        score = 100;
+    }
+    else {
+        score = score + temp;
+    }
+
+    timeArr.push(timePassed);
+    stopTimer();
+    loseArr.push(score);
+    totalArr.push(score);
+    updateScore();
+    reset();
+}
+
+function updateScore() {
+    wins.innerHTML = "Total wins: " + scoreArr.length;
+    losses.innerHTML = "Total losses: " + loseArr.length;
+    let lb = document.getElementsByName("leaderboard");
+    totalArr.sort((a,b) => a-b);
+    let sum = 0;
+    let timeSum = 0;
+    scoreDisplay.style.display = "block";
+    if (score <= Math.ceil(0.1*level)) {
+        scoreDisplay.innerHTML = "Your score is very good!";
+    }
+    else if (score <= Math.ceil(0.2*level)) {
+        scoreDisplay.innerHTML = "Your score is good!";
+    }
+    else if (score <= Math.ceil(0.5*level)) {
+        scoreDisplay.innerHTML = "Your score is okay.";
+    }
+    else if (score <=Math.ceil(0.7*level)) {
+        scoreDisplay.innerHTML = "Your score is not good.";
+    }
+    else {
+        scoreDisplay.innerHTML = "Your score is bad.";
+    }
+    
+    for (let i=0; i<totalArr.length; i++) {
+        if (i<lb.length) {
+            lb[i].innerHTML = userName + ": " + totalArr[i];
+        }
+        sum += totalArr[i];
+    }
+    let avg = sum/totalArr.length;
+    avgScore.innerHTML = "Average Score: " + avg.toFixed(2);
+
+    for (let i=0; i<timeArr.length; i++) {
+        timeSum += timeArr[i];
+    }
+    let averageTime = (timeSum/timeArr.length).toFixed(0);
+    let mins = Math.floor(averageTime/60000);
+    let secs = Math.floor((averageTime % 60000)/1000);
+    let ms = (averageTime % 60000) % 1000;
+
+    if (mins<10) {
+        mins = "0" + mins;
+    }
+    if (secs<10) {
+        secs = "0" + secs;
+    }
+    if (ms<10) {
+        ms = "00" + ms;
+    }
+    else if (ms<100) {
+        ms = "0" + ms;
+    }
+
+    avgTime.innerHTML = "Average Time: " + mins + ":" + secs + "." + ms;
+
+    timeArr.sort((a,b) => a-b);
+    fastestTime = timeArr[0]
+    let fastMins = Math.floor(fastestTime/60000);
+    let fastSecs = Math.floor((fastestTime % 60000)/1000);
+    let fastMs = Math.floor((fastestTime % 60000) % 1000);
+    if (fastMins<10) {
+        fastMins = "0" + fastMins;
+    }
+    if (fastSecs<10) {
+        fastSecs = "0" + fastSecs;
+    }
+    if (fastMs<10) {
+        fastMs = "00" + fastMs;
+    }
+    else if (ms<100) {
+        fastMs = "0" + fastMs;
+    }
+
+    fastestGame.innerHTML = "Fastest Game Played: " + fastMins + ":" + fastSecs + "." + fastMs;
+}
+
+function reset() {
     guess.disabled = true;
+    guessBtn.disabled = true;
+    playBtn.disabled = true;
+    for (let i=0; i<levelArr.length; i++) {
+        levelArr[i].disabled = true;
+    }
+    nameBtn.disabled = false;
+    Name.disabled = false;
     guess.value = "";
     guess.placeholder = "";
-    playBtn.disabled = false;
-
-    for(let i=0; i<levelArr.length; i++){
-
-        levelArr[i].disabled = false;
-
-    }
-
-
-}
-
-function updateScore(){
-
-    scoreArr.push(score);
-    scoreArr.sort((a,b)=>a-b) //Sort by increasing order
-    let lb = document.getElementsByName("leaderboard");
-    wins.textContent = "Total wins: " + scoreArr.length;
-    let sum = 0;
-
-    for(let i=0; i<scoreArr.length; i++){
-
-        sum += scoreArr[i]
-
-        if(i<lb.length){
-
-            lb[i].textContent = scoreArr[i];
-
-        }
-
-    }
-
-    let avg = sum/scoreArr.length;
-    avgScore.textContent = "Average Score: " + avg.toFixed(2);
-
-}
-
-function time(){
-
-    let d = new Date();
-
-    //Concatenate a string with all the date info
-    let times = new Date();
-    let h = times.getHours();
-    let m = times.getMinutes();
-    let s = times.getSeconds();
-    if ( s < 10 ) { s = "0" + s; } // 0 for display
-    document.getElementById("date").innerHTML = h + ':' + m + ':' + s;
-
-    return d;
-
-}
-
-function Name(){
-    name = document.getElementById("name").value;
-    name = name.toLowerCase();
-    console.log(name);
-    name = String(name).charAt(0).toUpperCase() + String(name).slice(1);
-    document.getElementById("printName").innerHTML = "hello, " + name;
+    custom.placeholder = "";
+    custom.value = "";
+    enterName.innerHTML = "Enter a name";
+    giveUpBtn.disabled = true;
+    hintBtn.disabled = true;
+    hints.innerHTML = "";
+    hintNumbers.innerHTML = "Hints: 0";
 }

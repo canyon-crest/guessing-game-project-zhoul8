@@ -1,37 +1,62 @@
 <!DOCTYPE html>
+
 <html>
-  <head>
-    <title>JavaScript Number Guessing Game</title>
-    <script src="script.js" defer></script>
-  </head>
-  <body>
-    <p id="date"></p>
+    <head>
+        <title>Guessing Game</title>
+        <link rel="stylesheet" href="styles.css" />
+        <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    </head>
 
-    <h3>Enter your name</h3>
-    <input type="text" id="name"> <button id="catBtn">Submit my name >^ - ^<</button>
-    <p id="printName">Hello, </p>
+    <body>
+        <h2>Welcome to Guessing Game Website!</h2>
+        <p id="date"></p>
 
-    <h3>Level</h3>
-    <input type="radio" name="level" id="e" value="3" checked><label for="e">Easy</label>
-    <input type="radio" name="level" id="m" value="10"><label for="m">Medium</label>
-    <input type="radio" name="level" id="h" value="100"><label for="h">Hard</label>
+        <h3 id="enterName">Name</h3>
+        <input type="text" id="Name" placeholder="Enter a name">
+        <button id="nameBtn">Confirm</button>
 
-    <button id="playBtn">Play</button>
+        <h3>Level</h3>
 
-    <h3 id="msg">Select a Level</h3>
-    <input type="text" id="guess">
-    <button id="guessBtn" disabled>Guess</button>
-    <button id="giveUp" disabled>Give Up</button>
+        <input type="radio" name="level" id="easy" value="3" checked disabled>
+        <label for="easy">Easy</label>
+        <input type="radio" name="level" id="medium" value="10" disabled>
+        <label for="medium">Medium</label>
+        <input type="radio" name="level" id="hard" value="100" disabled>
+        <label for="hard">Hard</label>
+        <br/><br/>
+        <input type="text" id="custom" placeholder="Enter custom upper bound" disabled>
+        <label for="custom">Custom Level?</label>
+        <br/> <br/>
+        <button id="playBtn" disabled>Play</button>
 
-    <h3>Stats</h3>
-    <p id="wins">Total wins: 0</p>
-    <p id="avgScore">Average Score: </p>
+        <h3 id="msg">Select a Level</h3>
+        <h3 id="scoreDisplay">Score</h3>
+        <h4 id="msg1">Temperature:</h4>
+        <h4 id="displayTime">Time:</h4>
 
-    <h3>Leaderboard</h3>
-    <ol>
-      <li name="leaderboard">100</li>
-      <li name="leaderboard">100</li>
-      <li name="leaderboard">100</li>
-    </ol>
-  </body>
+        <input type="text" id="guess" disabled>
+        <button id="guessBtn" disabled>Guess</button>
+        <br/>
+        <br/>
+        <button id="hintBtn" disabled>Need a Hint?</button>
+        <button id="giveUpBtn" disabled>Give up?</button>
+        <p id="hintNumbers">Hints: 0</p>
+        <p id="hints"></p>
+        <br/>
+<h3>Stats</h3>
+        <p id="wins">Total wins: 0</p>
+        <p id="losses">Total losses: 0</p>
+        <p id="avgScore">Average Score:</p>
+        <p id="avgTime">Average Time:</p>
+        <p id="fastestGame">Fastest Time:</p>
+
+        <h3>Leaderboard</h3>
+        <ol>
+            <li name="leaderboard">100
+            <li name="leaderboard">100
+            <li name="leaderboard">100
+        </ol>
+
+        <script type="text/javascript" src="script.js"></script>
+    </body>
 </html>
