@@ -1,5 +1,6 @@
 const levelArr = document.getElementsByName("level");
-let level, answer, score, userName, temp, startingTime, timePassed, stopped, userHints;
+let level, answer, score, temp, userName, startingTime, timePassed, stopped, userHints, messageTime;
+
 const scoreArr = [];
 const loseArr = [];
 const totalArr = [];
@@ -24,16 +25,12 @@ function time() {
     let hour = date.getHours();
     let sec = date.getSeconds();
     let amPm = "AM";
-
     switch (dow) {
-        case 0: dow = "Sunday"; break;
-        case 1: dow = "Monday"; break;
-        case 2: dow = "Tuesday"; break;
-        case 3: dow = "Wednesday"; break;
-        case 4: dow = "Thursday"; break;
-        case 5: dow = "Friday"; break;
-        case 6: dow = "Saturday"; break;
-    }
+        case 0: dow = "Sunday"; break;case 1: dow = "Monday"; break;case 2: dow = "Tuesday"; break;case 3: dow = "Wednesday"; break;case 4: dow = "Thursday"; break;case 5: dow = "Friday"; break;case 6: dow = "Saturday"; break;
+    } // next time use lists/dictionaries, too tedious.
+    // like let monthList = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    // month = monthList[month]
+    
 
     switch (month) {
         case 0: month = "January"; break;
@@ -49,31 +46,35 @@ function time() {
         case 10: month = "November"; break;
         case 11: month = "December"; break;
     }
-
     switch (dom%10) {
         case 1: dom = dom+"st"; break;
         case 2: dom = dom+"nd"; break;
         case 3: dom = dom+"rd"; break;
         default: dom = dom+"th"; break;
     }
+    if (userName == undefined){
+    if (hour>=12) {hour = hour-12;amPm = "PM";}
+    if (hour==0) {hour = 12;}
+    if (mins<10) {mins = "0" + mins;}
+    if (sec<10) {sec = "0" + sec;}
+    document.getElementById("date").innerHTML = "The time is " + hour+":"+mins+":"+sec+" "+amPm+"<br> It is " +dow+", "+month+" "+dom+", "+year;
+}
+    else{
+    if (hour < 3) {messageTime = "its wayyy too late for this "+ userName+ ". Go to sleep!";}
+    else if (hour < 6) {messageTime = "Get the day, "+ userName+ ", you early bird! Or night owl, I suppose";}
+    else if (hour < 11) {messageTime = "Nothing like a morning coffee, "+userName+ ". Or juice. Or breakfast.";}
+    else if (hour < 14) {messageTime = "What did you have for lunch, " + userName + "?";}
+    else if (hour < 17) {messageTime = "Did you see any birds on your way home," + userName + "?";}
+    else if (hour < 21) {messageTime = "How was dinner, "+userName+"?";}
+    else if (hour < 23) {messageTime = "wow, its getting late," +userName+". Getting closer and closer to midnight.";}
+    else {messageTime = userName+"! It's almost midnight! How exciting!";}
+    if (hour>=12) {hour = hour-12;amPm = "PM";}
+    if (hour==0) {hour = 12;}
+    if (mins<10) {mins = "0" + mins;}
+    if (sec<10) {sec = "0" + sec;}
+    document.getElementById("date").innerHTML = "The time is " + hour+":"+mins+":"+sec+" "+amPm+"<br> It is " +dow+", "+month+" "+dom+", "+year + "<br>" + messageTime; 
+}
 
-    if (hour>=12) {
-        hour = hour-12;
-        amPm = "PM";
-    }
-
-    if (hour==0) {
-        hour = 12;
-    }
-
-    if (mins<10) {
-        mins = "0" + mins;
-    }
-
-    if (sec<10) {
-        sec = "0" + sec;
-    }
-    document.getElementById("date").innerHTML = "The time is " + hour+":"+mins+":"+sec+" "+amPm+"<br> The date is " +dow+", "+month+" "+dom+", "+year;
 }
 
 function start() {
@@ -103,7 +104,6 @@ function play() {
     score = 0;
     temp = 100;
     userHints = 0;
-
     let customDiff = custom.value;
     if (customDiff == "" || isNaN(customDiff) || customDiff <= 1) {
         for (let i=0; i<levelArr.length; i++) {
@@ -120,7 +120,6 @@ function play() {
             levelArr[i].checked = false;
         }
     }
-
     playBtn.disabled = true;
     custom.disabled = true;
     guess.disabled = false;
@@ -157,27 +156,16 @@ function timerGoing() {
     let secs = Math.floor((timePassed % 60000)/1000);
     let ms = (timePassed % 60000) % 1000;
 
-    if (mins<10) {
-        mins = "0" + mins;
-    }
-    if (secs<10) {
-        secs = "0" + secs;
-    }
-    if (ms<10) {
-        ms = "00" + ms;
-    }
-    else if (ms<100) {
-        ms = "0" + ms;
-    }
-
+    if (mins<10) {mins = "0" + mins;}
+    if (secs<10) {secs = "0" + secs;}
+    if (ms<10) {ms = "00" + ms;}
+    else if (ms<100) {ms = "0" + ms;}
     displayTime.innerHTML = "Time: " + mins + ":" + secs + "." + ms;
-    
 }
 
 function makeGuess() {
     let userGuess = parseInt(guess.value);
     temp = Math.abs(answer-userGuess);
-
     if (temp == 0) {
         msg1.innerHTML = "Temperature: YOU'RE THERE ITS BURNING MY SKIN OFF";
     }
@@ -198,9 +186,7 @@ function makeGuess() {
         userHints = userHints + 1;
         hintNumbers.innerHTML = "Hints: " + userHints;
         hintBtn.disabled = false;
-
     }
-
     if (userGuess == 0) {
         msg.innerHTML = "Too low. Guess an integer 1-" + level + ", " + userName;
         return;
