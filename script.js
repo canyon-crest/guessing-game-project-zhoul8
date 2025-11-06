@@ -1,5 +1,5 @@
 const levelArr = document.getElementsByName("level");
-let level, answer, score, temp, userName, startingTime, timePassed, stopped, userHints, messageTime;
+let level, answer, score, temp, userName, userName1, startingTime, timePassed, stopped, userHints, messageTime;
 
 const scoreArr = [];
 const loseArr = [];
@@ -52,22 +52,15 @@ function time() {
         case 3: dom = dom+"rd"; break;
         default: dom = dom+"th"; break;
     }
-    if (userName == undefined){
-    if (hour>=12) {hour = hour-12;amPm = "PM";}
-    if (hour==0) {hour = 12;}
-    if (mins<10) {mins = "0" + mins;}
-    if (sec<10) {sec = "0" + sec;}
-    document.getElementById("date").innerHTML = "The time is " + hour+":"+mins+":"+sec+" "+amPm+"<br> It is " +dow+", "+month+" "+dom+", "+year;
-}// test
-    else{
-    if (hour < 3) {messageTime = "its wayyy too late for this "+ userName+ ". Go to sleep!";}
-    else if (hour < 6) {messageTime = "Get the day, "+ userName+ ", you early bird! Or night owl, I suppose";}
-    else if (hour < 11) {messageTime = "Nothing like a morning coffee, "+userName+ ". Or juice. Or breakfast.";}
-    else if (hour < 14) {messageTime = "What did you have for lunch, " + userName + "?";}
-    else if (hour < 17) {messageTime = "Did you see any birds on your way home," + userName + "?";}
-    else if (hour < 21) {messageTime = "How was dinner, "+userName+"?";}
-    else if (hour < 23) {messageTime = "wow, its getting late," +userName+". Getting closer and closer to midnight.";}
-    else {messageTime = userName+"! It's almost midnight! How exciting!";}
+
+    if (hour < 3) {messageTime = "its wayyy too late for this. Go to sleep!";}
+    else if (hour < 6) {messageTime = "Get the day, you early bird! Or night owl, I suppose";}
+    else if (hour < 11) {messageTime = "Nothing like a morning coffee. Or juice. Or breakfast.";}
+    else if (hour < 14) {messageTime = "What did you have for lunch?";}
+    else if (hour < 17) {messageTime = "Did you see any birds on your way home?";}
+    else if (hour < 21) {messageTime = "How was dinner?";}
+    else if (hour < 23) {messageTime = "wow, its getting late. Getting closer and closer to midnight.";}
+    else {messageTime = "It's almost midnight! How exciting!";}
     if (hour>=12) {hour = hour-12;amPm = "PM";}
     if (hour==0) {hour = 12;}
     if (mins<10) {mins = "0" + mins;}
@@ -75,7 +68,6 @@ function time() {
     document.getElementById("date").innerHTML = "The time is " + hour+":"+mins+":"+sec+" "+amPm+"<br> It is " +dow+", "+month+" "+dom+", "+year + "<br>" + messageTime; 
 }
 
-}
 
 function start() {
     userName = document.getElementById("Name").value;
