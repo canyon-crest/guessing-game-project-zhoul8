@@ -58,7 +58,7 @@ function time() {
     if (mins<10) {mins = "0" + mins;}
     if (sec<10) {sec = "0" + sec;}
     document.getElementById("date").innerHTML = "The time is " + hour+":"+mins+":"+sec+" "+amPm+"<br> It is " +dow+", "+month+" "+dom+", "+year;
-}
+}// test
     else{
     if (hour < 3) {messageTime = "its wayyy too late for this "+ userName+ ". Go to sleep!";}
     else if (hour < 6) {messageTime = "Get the day, "+ userName+ ", you early bird! Or night owl, I suppose";}
