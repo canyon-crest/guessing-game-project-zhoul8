@@ -12,7 +12,6 @@ guessBtn.addEventListener("click", makeGuess);
 giveUpBtn.addEventListener("click", iGaveUp);
 hintBtn.addEventListener("click", giveHint);
 
-// date.innerHTML = time();
 setInterval(time, 500);
 
 function time() {
@@ -74,13 +73,15 @@ function time() {
     if (sec<10) {
         sec = "0" + sec;
     }
-    document.getElementById("date").innerHTML = hour+":"+mins+":"+sec+" "+amPm+"<br/>"+dow+", "+month+" "+dom+", "+year;
+    document.getElementById("date").innerHTML = "The time is " + hour+":"+mins+":"+sec+" "+amPm+"<br> The date is " +dow+", "+month+" "+dom+", "+year;
 }
 
 function start() {
     userName = document.getElementById("Name").value;
+    userName = userName.toLowerCase();
+    userName = userName.charAt(0).toUpperCase() + userName.slice(1);
     if (userName == "") {
-        enterName.innerHTML = "Please enter a name";
+        enterName.innerHTML = "What is your name >^-^<";
         return;
     }
     else {
@@ -133,7 +134,6 @@ function play() {
 
     answer = Math.floor(Math.random()*level) + 1;
     msg.innerHTML = userName + ", Guess an integer 1-" + level;
-    guess.placeholder = answer; // get rid of this to remove answer showing
 }
 
 function startTimer() {
@@ -179,22 +179,22 @@ function makeGuess() {
     temp = Math.abs(answer-userGuess);
 
     if (temp == 0) {
-        msg1.innerHTML = "Temperature: BURNING!";
+        msg1.innerHTML = "Temperature: YOU'RE THERE ITS BURNING MY SKIN OFF";
     }
     else if (temp <= 0.05*level) {
-        msg1.innerHTML = "Temperature: Very Hot"
+        msg1.innerHTML = "Temperature: Almost theree! Hot like a ghost pepper!"
     }
     else if (temp <= 0.1*level) {
-        msg1.innerHTML = "Temperature: Hot";
+        msg1.innerHTML = "Temperature: Hot, but like black pepper sprinkled on your eggs";
     }
     else if (temp <= 0.2*level) {
-        msg1.innerHTML = "Temperature: Warm";
+        msg1.innerHTML = "Temperature: warm! feels like a warm bath";
     }
     else if (temp <= 0.5*level) {
-        msg1.innerHTML = "Temperature: Cool";
+        msg1.innerHTML = "Temperature: mmmm,, cool like a fridge";
     }
     else {
-        msg1.innerHTML = "Temperature: Cold";
+        msg1.innerHTML = "Temperature: brrrrrrr! I'm freezing!";
         userHints = userHints + 1;
         hintNumbers.innerHTML = "Hints: " + userHints;
         hintBtn.disabled = false;
@@ -206,7 +206,7 @@ function makeGuess() {
         return;
     }
     else if (isNaN(userGuess) || userGuess == "") {
-        msg.innerHTML = "Invalid. Guess an integer 1-" + level + ", " + userName;
+        msg.innerHTML = "You need to enter a number >^-^<. Guess an integer 1-" + level + ", " + userName;
         return;
     }
     score++;
